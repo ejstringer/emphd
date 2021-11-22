@@ -54,13 +54,13 @@ em.fst.trip <- function(glx, as.pop = "gridId", min.n = 4, equal = F){
       sampleSize <- data.frame(table(glTidy$other$ind.metrics[, as.pop], 
                           glTidy$other$ind.metrics$trip))
       sampleSize2 <- sampleSize 
-      names(sampleSize) <- c("Population1", "trip", "n1")
-      names(sampleSize2) <- c("Population2", "trip", "n2")
+      names(sampleSize) <- c("Population2", "trip", "n1")
+      names(sampleSize2) <- c("Population1", "trip", "n2")
 
       
       fst.reduce <-  do.call("rbind", boot.fst)
-      fst.n <- merge(fst.reduce, sampleSize, by = c("trip", "Population1"))
-      fst.nn <- merge(fst.n, sampleSize2, by = c("trip", "Population2"))
+      fst.n <- merge(fst.reduce, sampleSize, by = c("trip", "Population2"))
+      fst.nn <- merge(fst.n, sampleSize2, by = c("trip", "Population1"))
       
       fst <- fst.nn
       names(fst) <- c(names(fst.nn)[1:3], paste0(1:100, "boot"), 
@@ -127,3 +127,68 @@ em.fis.trip <- function(glx, as.pop = "gridId", min.n = 4, equal = F){
   return(heterozygosity)
 }
 
+
+
+# f combine --------------------------------------------------------------------
+
+#' combines fst or heterozygosities with since event, captures, rainfall,
+#' grid coordinates
+#' 
+#' fis bootstraps df calculated for a single genlight object.
+#' fis separated by trip and based on your defined populations.
+#' 
+#' @param stat -- fst or heterozygosity df from em.fst.trip 
+#' @param eventDates -- list of dates since event (yyyy-mm-01)
+#' @param rainCap -- df of rainfall and captures
+#' @param grids -- grid cordinates df
+#' @param as.pop -- defined population to base fis calculations on
+#' @return combined df 
+#' @export
+#' @author Emily Stringer
+#' @examples  em.stat.combine(heterozygosity, raindates, raincap) 
+
+
+em.stat.combine <- function(stat, eventDates, rainCap = NULL, grids = NULL, 
+                             as.pop = "gridId"){
+  fstx <- em.months.since(eventDates, stat) 
+  fstx <- fstx[complete.cases(fstx$sinceEvent),]
+  
+
+  zeros <- sum(fstx$monthsSince == "0")
+  fstx$monthsSince.log <- log(fstx$monthsSince+1)
+  if(zeros == 0) fstx$monthsSince.log <- log(fstx$monthsSince)
+  if(zeros == 0) cat("no zeros in monthsSince, so NO adjustment(+1)", "\n")
+  
+  
+  if(!is.null(rainCap)) fstx <- merge(fstx, rainCap, by = "trip", all.x = TRUE)
+  
+  
+  ## fst specific
+  if("Fst" %in% names(fstx)){
+      fstx$fst.log <- log(fstx$Fst + abs(min(fstx$Fst)) + 0.0001) 
+      
+      
+      for (i in 1:nrow(fstx)) {
+        pop12 <- fstx[i,c("Population1", "Population2")]
+        fstx$pairs[i] <- paste(sort(pop12), collapse = "-")
+      }
+    
+      
+      if(!is.null(grids)){
+        gMetres <- em.distance.m(grids, between = as.pop)
+        gMetres$Population1 <- as.character(gMetres$Population1)
+        gMetres$Population2 <- as.character(gMetres$Population2)
+        
+        for (i in 1:nrow(gMetres)) {
+          pop12 <- gMetres[i,c("Population1", "Population2")]
+          gMetres$pairs[i] <- paste(sort(pop12), collapse = "-")
+        }  
+        fstx <- merge(fstx, gMetres[,c("pairs", "metres")], by = "pairs",
+                      all.x = T)
+        
+      }
+  }
+  
+  return(fstx)
+  
+}

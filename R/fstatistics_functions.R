@@ -109,11 +109,21 @@ em.fis.trip <- function(glx, as.pop = "gridId", min.n = 4, equal = F){
   # seperate by trip and as.pop
   pop(glTidyn) <- paste(glTidyn@other$ind.metrics$trip, 
                        glTidyn@other$ind.metrics[,as.pop])
+  
+  
   glsep <- seppop(glTidyn)
-  glsepHo <- sapply(lapply(glsep, gl.Ho), function(x) mean(x, na.rm = T))
-  glsepHe <- sapply(lapply(glsep, gl.He), function(x) mean(x, na.rm = T))
-  glsepHoVar <- sapply(lapply(glsep, gl.Ho), function(x) var(x, na.rm = T))
-  glsepHeVar <- sapply(lapply(glsep, gl.He), function(x) var(x, na.rm = T))
+  
+  he <- lapply(glsep, gl.He)
+  ho <- lapply(glsep, gl.Ho)
+  
+  fis <- lapply(glsep, function(x) (gl.He(x) - gl.Ho(x))/gl.He(x))
+  
+  glsepHo <- sapply(ho, function(x) mean(x, na.rm = T))
+  glsepHe <- sapply(he, function(x) mean(x, na.rm = T))
+  glsepHoVar <- sapply(ho, function(x) var(x, na.rm = T))
+  glsepHeVar <- sapply(he, function(x) var(x, na.rm = T))
+  glsepFis <- sapply(fis, function(x) mean(x, na.rm=T))
+   
   
   dfnames <- data.frame(do.call("rbind", strsplit(names(glsep), "\\s+")),
                         row.names = NULL)
@@ -123,11 +133,10 @@ em.fis.trip <- function(glx, as.pop = "gridId", min.n = 4, equal = F){
   heterozygosity <- data.frame(df.n, row.names = NULL,
                                ho = glsepHo, hoVar = glsepHoVar,
                                he = glsepHe, heVar = glsepHeVar,
-                               fis = (glsepHe- glsepHo)/glsepHe)
+                               fis = glsepFis,
+                               fis.heho = (glsepHe- glsepHo)/glsepHe)
   return(heterozygosity)
 }
-
-
 
 # f combine --------------------------------------------------------------------
 

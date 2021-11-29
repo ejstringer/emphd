@@ -87,9 +87,9 @@ em.fst.trip <- function(glx, as.pop = "gridId", min.n = 4, equal = F){
 #' @export
 #' @import dartR
 #' @author Emily Stringer
-#' @examples  heterozygosity <- em.fis.trip(gl)
+#' @examples  heterozygosity <- em.heterozygosity.trip(gl)
 
-em.fis.trip <- function(glx, as.pop = "gridId", min.n = 4, equal = F){
+em.heterozygosity.trip <- function(glx, as.pop = "gridId", min.n = 4, equal = F){
   
   # subset by sample size
   tripPop <- paste0(glx@other$ind.metrics$trip, 
@@ -99,9 +99,13 @@ em.fis.trip <- function(glx, as.pop = "gridId", min.n = 4, equal = F){
                        equal = equal)
   if(is.null(glTidyn)) stop("min.n is larger than max number of samples")
   # sample size
+  sampleSize <- data.frame(table(glTidyn$other$ind.metrics$trip))
+  names(sampleSize) <- c("trip", "n")
+   if(!is.null(as.pop)){
   sampleSize <- data.frame(table(glTidyn$other$ind.metrics[, as.pop], 
                                  glTidyn$other$ind.metrics$trip))
   names(sampleSize) <- c(as.pop, "trip", "n")
+    }
    
 
   

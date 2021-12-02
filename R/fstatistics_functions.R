@@ -215,16 +215,6 @@ em.stat.combine <- function(stat, eventDates, rainCap = NULL, grids = NULL,
         names(gridx) <- c("Population1", "pop1")
         fstx <- merge(fstx, gridx, all.x = T)
         
-        
-        grids <- read.csv("./data/em_gridcoortable.csv") %>% 
-          select(gridId, site) %>% 
-          rename(pop = site)
-        
-        fst <- read.csv("./output/pherm_fst.csv") %>% 
-          left_join(grids, by = c("Population1" = "gridId")) %>%
-          left_join(grids, by = c("Population2" = "gridId"))
-        het <- read.csv("../emilyphd-sandbox/output/pherm_heterozygosity.csv")
-        
       }
   }
   

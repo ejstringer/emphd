@@ -158,7 +158,7 @@ em.heterozygosity.trip <- function(glx, as.pop = "gridId", min.n = 4, equal = F)
 #' @return combined df 
 #' @export
 #' @author Emily Stringer
-#' @examples  em.stat.combine(heterozygosity, raindates, raincap) 
+#' @examples  em.stat.combine(heterozygosity, raindates, raincap, grids) 
 
 
 em.stat.combine <- function(stat, eventDates, rainCap = NULL, grids = NULL, 
@@ -174,6 +174,15 @@ em.stat.combine <- function(stat, eventDates, rainCap = NULL, grids = NULL,
   
   
   if(!is.null(rainCap)) fstx <- merge(fstx, rainCap, by = "trip", all.x = TRUE)
+  
+  
+  ## het specific
+  if(!is.null(grids) & ("he" %in% names(fstx))) {
+    gridx <- grids[, c(as.pop, "site")]
+    names(gridx) <- c(as.pop, "pop")
+    fstx <- merge(fstx, gridx, all.x = T)
+    
+  }
   
   
   ## fst specific
@@ -198,6 +207,23 @@ em.stat.combine <- function(stat, eventDates, rainCap = NULL, grids = NULL,
         }  
         fstx <- merge(fstx, gMetres[,c("pairs", "metres")], by = "pairs",
                       all.x = T)
+        
+        gridx <- grids[, c(as.pop, "site")]
+        
+        names(gridx) <- c("Population2", "pop2")
+        fstx <- merge(fstx, gridx, all.x = T)
+        names(gridx) <- c("Population1", "pop1")
+        fstx <- merge(fstx, gridx, all.x = T)
+        
+        
+        grids <- read.csv("./data/em_gridcoortable.csv") %>% 
+          select(gridId, site) %>% 
+          rename(pop = site)
+        
+        fst <- read.csv("./output/pherm_fst.csv") %>% 
+          left_join(grids, by = c("Population1" = "gridId")) %>%
+          left_join(grids, by = c("Population2" = "gridId"))
+        het <- read.csv("../emilyphd-sandbox/output/pherm_heterozygosity.csv")
         
       }
   }

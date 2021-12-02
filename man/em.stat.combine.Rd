@@ -32,7 +32,7 @@ fis bootstraps df calculated for a single genlight object.
 fis separated by trip and based on your defined populations.
 }
 \examples{
- em.stat.combine(heterozygosity, raindates, raincap) 
+ em.stat.combine(heterozygosity, raindates, raincap, grids) 
 }
 \author{
 Emily Stringer

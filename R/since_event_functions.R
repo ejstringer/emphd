@@ -18,7 +18,7 @@ em.months.since <- function(eventdate, df){
   if(!"trip" %in% names(df)) stop('trip not in ind.metrics') 
   
   eventdate <- sort(eventdate)
-  mintrip <- min(lubridate::ymd(df$trip))
+  mintrip <- min(lubridate::ymd(eventdate))
   maxtrip <- max(lubridate::ymd(df$trip))
   
   dfdates <- data.frame(trip=seq(mintrip, maxtrip, by="months"), 

@@ -142,6 +142,9 @@ em.heterozygosity.trip <- function(glx, as.pop = "gridId", min.n = 4, equal = F)
   return(heterozygosity)
 }
 
+
+
+
 # f combine --------------------------------------------------------------------
 
 #' combines fst or heterozygosities with since event, captures, rainfall,
@@ -219,5 +222,36 @@ em.stat.combine <- function(stat, eventDates, rainCap = NULL, grids = NULL,
   }
   
   return(fstx)
+  
+}
+
+
+# heterozygosity ---------------------------------------------------------------
+
+#' Individual heterozygosity
+#' 
+#' seppop based on ind.names and calculates gl.ho
+#' 
+#' @param gl -- a genlight object
+#' @return df with ho and gl ind.metrics
+#' @export
+#' @import dartR
+#' @author Emily Stringer
+#' @examples  heterozygosity <- em.heterozygosity.ind(gl)
+
+
+em.heterozygosity.ind <- function(gl){
+  
+  pop(gl) <- gl@ind.names
+  
+  indpop <- seppop(gl)
+  
+  hoInd <- sapply(indpop, function(x) mean(gl.Ho(x), na.rm = TRUE))
+  
+  hoDf <- data.frame(id = names(hoInd), ho = hoInd, row.names = NULL)
+  
+  hoIndmeta <- merge(hoDf, gl@other$ind.metrics)
+  
+  return(hoIndmeta)
   
 }

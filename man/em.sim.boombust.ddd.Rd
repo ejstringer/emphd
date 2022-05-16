@@ -4,22 +4,24 @@
 \alias{em.sim.boombust.ddd}
 \title{conceptual simulation gl.offspring in regard}
 \usage{
-em.sim.boombust.ddd(glBase, dispersal = 0.1, dispPositive = TRUE)
+em.sim.boombust.ddd(glBase, dispersal = 0.1, dispersalType = "positive")
 }
 \arguments{
 \item{glBase}{-- a genlight object to base simulation on (starting snps)}
 
 \item{dispersal}{-- amount of dispersal}
 
-\item{dispPositive}{-- logical for positive density-dependent dispersal}
+\item{dispersalType}{-- postive, negative, or constant dispersal.}
 }
 \value{
 returns genlight for 20 generations
 }
 \description{
 quick and dirty sim function based on em.sim.boombust.
+looking at density-dependent dispersal.
 }
 \details{
+d-d = density dependent.
 See em.sim.boombust for more details...
 }
 \examples{

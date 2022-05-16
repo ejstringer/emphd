@@ -216,13 +216,15 @@ em.sim.boombust <- function(glBase, pops = 5, popSize = 50,
 #' conceptual simulation gl.offspring in regard
 #' 
 #' quick and dirty sim function based on em.sim.boombust.
+#' looking at density-dependent dispersal.
 #' 
+#' d-d = density dependent.
 #' See em.sim.boombust for more details...
 #' 
 #' 
 #' @param glBase -- a genlight object to base simulation on (starting snps)
 #' @param dispersal -- amount of dispersal
-#' @param dispPositive -- logical for positive density-dependent dispersal
+#' @param dispersalType -- postive, negative, or constant dispersal.
 #' @return returns genlight for 20 generations
 #' @export
 #' @import tidyverse
@@ -231,7 +233,8 @@ em.sim.boombust <- function(glBase, pops = 5, popSize = 50,
 #' @examples sim <- em.sim.boombust.ddd(gl, dispersal = 0.05, dispPositive = T)
 
 
-em.sim.boombust.ddd <- function(glBase, dispersal = 0.10, dispPositive = TRUE) {
+em.sim.boombust.ddd <- function(glBase, dispersal = 0.10, 
+                                dispersalType = "positive") {
   
   #tidy sex column 
   if(is.null(glBase@other$ind.metrics$sex)) stop("base gl needs sex column")
@@ -254,8 +257,9 @@ em.sim.boombust.ddd <- function(glBase, dispersal = 0.10, dispPositive = TRUE) {
   n.gen= 20
   
   m.rate = 1e-7 #mutation rate
-  mixev =  c(5,6,15,16)#mix generatoion
-  if (!dispPositive) mixev = c(1:20)[!(1:20 %in% c(5,6,15,16))]
+  if(dispersalType == "postive") mixev =  c(5,6,15,16)#mix generatoion
+  if (dispersalType == "negative") mixev = c(1:20)[!(1:20 %in% c(5,6,15,16))]
+  if (dispersalType == "constant") mixev = c(1:20)
   pop.inc = c(5,15,21) 
   m.ind = dispersal #mixing ratio - just going with 1 ind
   calcev = 1 #calc fst every calcev generation DONT NEED

@@ -236,6 +236,9 @@ em.sim.boombust <- function(glBase, pops = 5, popSize = 50,
 em.sim.boombust.ddd <- function(glBase, dispersal = 0.10, 
                                 dispersalType = "positive") {
   
+  dispOpt <-  c("positive", "negative", "constant")
+  if(!dispersalType %in%  dispOpt) stop("dispersalType must equal either:", 
+                                       paste(dispOpt, collapse = " "))
   #tidy sex column 
   if(is.null(glBase@other$ind.metrics$sex)) stop("base gl needs sex column")
   sex <- glBase@other$ind.metrics$sex
@@ -257,7 +260,7 @@ em.sim.boombust.ddd <- function(glBase, dispersal = 0.10,
   n.gen= 20
   
   m.rate = 1e-7 #mutation rate
-  if(dispersalType == "postive") mixev =  c(5,6,15,16)#mix generatoion
+  if(dispersalType == "positive") mixev =  c(5,6,15,16)#mix generatoion
   if (dispersalType == "negative") mixev = c(1:20)[!(1:20 %in% c(5,6,15,16))]
   if (dispersalType == "constant") mixev = c(1:20)
   pop.inc = c(5,15,21) 

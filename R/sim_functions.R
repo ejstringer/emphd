@@ -223,17 +223,18 @@ em.sim.boombust <- function(glBase, pops = 5, popSize = 50,
 #' 
 #' 
 #' @param glBase -- a genlight object to base simulation on (starting snps)
+#' @param subpops -- number of subpopulations
 #' @param dispersal -- amount of dispersal
-#' @param dispersalType -- postive, negative, or constant dispersal.
+#' @param dispersalType -- positive, negative, or constant dispersal.
 #' @return returns genlight for 20 generations
 #' @export
 #' @import tidyverse
 #' @import dartR
 #' @author Emily Stringer
-#' @examples sim <- em.sim.boombust.ddd(gl, dispersal = 0.05, dispPositive = T)
+#' @examples sim <- em.sim.boombust.ddd(gl)
 
 
-em.sim.boombust.ddd <- function(glBase, dispersal = 0.10, 
+em.sim.boombust.ddd <- function(glBase, subpops = 25, dispersal = 0.10, 
                                 dispersalType = "positive") {
   
   dispOpt <-  c("positive", "negative", "constant")
@@ -254,7 +255,7 @@ em.sim.boombust.ddd <- function(glBase, dispersal = 0.10,
   glfilter <- glsex
   
   #number of populations
-  n.pop= 25
+  n.pop= subpops
   popSize = 20
   #number of generations to run
   n.gen= 20
@@ -416,5 +417,40 @@ em.sim.boombust.ddd <- function(glBase, dispersal = 0.10,
   
   
   return(res)
+  
+}
+
+
+#' wrapper function for em.sim.boombust.ddd
+#' 
+#' This function simulates the three different types of dispersal on one
+#' genlight object with a select dispersal rate and number of subpopulations.
+#' Population size of subpopulations is set at 20. 
+#' 
+#' 
+#' @param glBase -- a genlight object to base simulation on (starting snps)
+#' @param subpops -- number of subpopulations
+#' @param dispersal -- amount of dispersal
+#' @return returns genlight for 20 generations
+#' @export
+#' @import tidyverse
+#' @import dartR
+#' @author Emily Stringer
+#' @examples sim <- em.sim.boombust.ddd(gl, supops = 100, dispersal = 0.05)
+
+
+
+em.sim.wrapper <- function(glbase, subpops = 25, dispersal = 0.10) {
+  #positive
+  simP <- em.sim.boombust.ddd(ph3, dispersal = 0.05,
+                              dispersalType = "positive")
+  simList <- list()
+  disp <- c("postive", "negative", "constant")
+  simList <- lapply(disp, function(x) em.sim.boombust.ddd(glBase, 
+                                                          subpops,
+                                                          dispersal,
+                                                          dispersalType = x))
+  names(simList) <- disp
+  return(simList)
   
 }

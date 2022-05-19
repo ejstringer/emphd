@@ -4,14 +4,21 @@
 \alias{em.sim.boombust.ddd}
 \title{conceptual simulation gl.offspring in regard}
 \usage{
-em.sim.boombust.ddd(glBase, dispersal = 0.1, dispersalType = "positive")
+em.sim.boombust.ddd(
+  glBase,
+  subpops = 25,
+  dispersal = 0.1,
+  dispersalType = "positive"
+)
 }
 \arguments{
 \item{glBase}{-- a genlight object to base simulation on (starting snps)}
 
+\item{subpops}{-- number of subpopulations}
+
 \item{dispersal}{-- amount of dispersal}
 
-\item{dispersalType}{-- postive, negative, or constant dispersal.}
+\item{dispersalType}{-- positive, negative, or constant dispersal.}
 }
 \value{
 returns genlight for 20 generations
@@ -25,7 +32,7 @@ d-d = density dependent.
 See em.sim.boombust for more details...
 }
 \examples{
-sim <- em.sim.boombust.ddd(gl, dispersal = 0.05, dispPositive = T)
+sim <- em.sim.boombust.ddd(gl)
 }
 \author{
 Emily Stringer

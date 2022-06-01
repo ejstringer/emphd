@@ -440,9 +440,9 @@ em.sim.boombust.ddd <- function(glBase, subpops = 25, dispersal = 0.10,
 
 
 
-em.sim.wrapper <- function(glbase, subpops = 25, dispersal = 0.10) {
+em.sim.wrapper <- function(glBase, subpops = 25, dispersal = 0.10) {
   #positive
-  simP <- em.sim.boombust.ddd(ph3, dispersal = 0.05,
+  simP <- em.sim.boombust.ddd(glBase, dispersal = 0.05,
                               dispersalType = "positive")
   simList <- list()
   disp <- c("positive", "negative", "constant")

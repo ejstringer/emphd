@@ -4,14 +4,14 @@
 \alias{em.sim.wrapper}
 \title{wrapper function for em.sim.boombust.ddd}
 \usage{
-em.sim.wrapper(glbase, subpops = 25, dispersal = 0.1)
+em.sim.wrapper(glBase, subpops = 25, dispersal = 0.1)
 }
 \arguments{
+\item{glBase}{-- a genlight object to base simulation on (starting snps)}
+
 \item{subpops}{-- number of subpopulations}
 
 \item{dispersal}{-- amount of dispersal}
-
-\item{glBase}{-- a genlight object to base simulation on (starting snps)}
 }
 \value{
 returns genlight for 20 generations

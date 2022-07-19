@@ -223,9 +223,11 @@ em.sim.boombust <- function(glBase, pops = 5, popSize = 50,
 #' 
 #' 
 #' @param glBase -- a genlight object to base simulation on (starting snps)
+#' @param popSize -- subpopulaiton size
 #' @param subpops -- number of subpopulations
 #' @param dispersal -- amount of dispersal
 #' @param dispersalType -- positive, negative, or constant dispersal.
+#' @param nOff -- number of offspring after generation 0 (gen0 is set to 4)
 #' @return returns genlight for 20 generations
 #' @export
 #' @import tidyverse
@@ -234,8 +236,9 @@ em.sim.boombust <- function(glBase, pops = 5, popSize = 50,
 #' @examples sim <- em.sim.boombust.ddd(gl)
 
 
-em.sim.boombust.ddd <- function(glBase, subpops = 25, dispersal = 0.10, 
-                                dispersalType = "positive") {
+em.sim.boombust.ddd <- function(glBase, popSize = 20, subpops = 10, 
+                                dispersal = 0.10, 
+                                dispersalType = "positive", nOff = 4) {
   
   dispOpt <-  c("positive", "negative", "constant")
   if(!dispersalType %in%  dispOpt) stop("dispersalType must equal either:", 
@@ -256,7 +259,7 @@ em.sim.boombust.ddd <- function(glBase, subpops = 25, dispersal = 0.10,
   
   #number of populations
   n.pop= subpops
-  popSize = 20
+  #popSize = 20
   #number of generations to run
   n.gen= 20
   
@@ -362,7 +365,7 @@ em.sim.boombust.ddd <- function(glBase, subpops = 25, dispersal = 0.10,
       genMum <- gen[gen@other$sex == "female",]
       
       gen <- gl.sim.offspring(fathers = genDad, mothers = genMum,
-                              noffpermother = 4, sexratio = 0.5)
+                              noffpermother = nOff, sexratio = 0.5)
       
       genF <- gen[gen@other$sex == "female",]
       genF25 <- genF[sample(1:nInd(genF), min(nInd(genF), popSize/2)),]

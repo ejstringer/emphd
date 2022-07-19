@@ -6,19 +6,25 @@
 \usage{
 em.sim.boombust.ddd(
   glBase,
-  subpops = 25,
+  popSize = 20,
+  subpops = 10,
   dispersal = 0.1,
-  dispersalType = "positive"
+  dispersalType = "positive",
+  nOff = 4
 )
 }
 \arguments{
 \item{glBase}{-- a genlight object to base simulation on (starting snps)}
+
+\item{popSize}{-- subpopulaiton size}
 
 \item{subpops}{-- number of subpopulations}
 
 \item{dispersal}{-- amount of dispersal}
 
 \item{dispersalType}{-- positive, negative, or constant dispersal.}
+
+\item{nOff}{-- number of offspring after generation 0 (gen0 is set to 4)}
 }
 \value{
 returns genlight for 20 generations
